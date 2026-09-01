@@ -1,0 +1,43 @@
+# ============================
+# SETTLEIQ .gitignore
+# ============================
+
+# --- Secrets & API Keys ---
+.env
+.env.*
+*.env
+secrets/
+config/local.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.class
+*.egg-info/
+.bench_tmp/
+venv/
+.venv/
+env/
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+dist/
+build/
+next-env.d.ts
+*.log
+
+# --- IDE & OS ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Local Reference Files ---
+docs/
+PROJECT_CONTEXT.md
+start.bat
+SUBMISSION_KIT.md
