@@ -98,6 +98,14 @@ export default function Home() {
     // Initialise tab from URL hash (enables direct linking / bookmark support)
     const initialTab = getTabFromHash();
     setActiveTab(initialTab);
+
+    // Auto-load dataset on mount so judges and visitors immediately see populated data
+    loadDemoSample().then((res) => {
+      setSummary(res.summary);
+      getExceptions().then((excs) => {
+        setExceptions(excs.exceptions);
+      });
+    }).catch(() => {});
     // Replace the current history entry with structured state
     window.history.replaceState(
       { tab: initialTab, hasDataset: false },
@@ -114,11 +122,7 @@ export default function Home() {
       setSelectedOrderId(state.drawer || null);
       // Restore exception filter if present in state
       if (state.filter) setInitialExceptionFilter(state.filter);
-      // If user went back to pre-dataset state, reset dataset
-      if (state.hasDataset === false) {
-        setSummary(null);
-        setExceptions([]);
-      }
+
     };
 
     window.addEventListener("popstate", handlePopState);
