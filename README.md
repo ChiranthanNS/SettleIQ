@@ -1,8 +1,13 @@
-# SETTLEIQ
+﻿# SETTLEIQ
 
 **Financial Reconciliation & Automated Discrepancy Analysis System**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-0052CC?style=flat-square)](https://chiranthan-ns.github.io/SettleIQ/)
+[![Repo](https://img.shields.io/badge/GitHub-SettleIQ-181717?style=flat-square)](https://github.com/ChiranthanNS/SettleIQ)
+
 SETTLEIQ reconciles internal merchant order ledgers against payment processor settlement reports (Razorpay, Stripe, Banks) and investigates discrepancies using a deterministic mathematical pipeline and evidence-grounded verification.
+
+> 🌐 **Live Interactive Demo**: [https://chiranthan-ns.github.io/SettleIQ/](https://chiranthan-ns.github.io/SettleIQ/)
 
 ---
 
