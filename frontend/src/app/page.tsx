@@ -99,13 +99,6 @@ export default function Home() {
     const initialTab = getTabFromHash();
     setActiveTab(initialTab);
 
-    // Auto-load dataset on mount so judges and visitors immediately see populated data
-    loadDemoSample().then((res) => {
-      setSummary(res.summary);
-      getExceptions().then((excs) => {
-        setExceptions(excs.exceptions);
-      });
-    }).catch(() => {});
     // Replace the current history entry with structured state
     window.history.replaceState(
       { tab: initialTab, hasDataset: false },
@@ -122,7 +115,11 @@ export default function Home() {
       setSelectedOrderId(state.drawer || null);
       // Restore exception filter if present in state
       if (state.filter) setInitialExceptionFilter(state.filter);
-
+      // If user went back to pre-dataset state, reset dataset
+      if (state.hasDataset === false) {
+        setSummary(null);
+        setExceptions([]);
+      }
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -131,8 +128,6 @@ export default function Home() {
     // This does NOT gate data loading — the user explicitly triggers loading.
     checkBackendHealth().then((online) => {
       setIsBackendOnline(online);
-      // If the real backend is live, silently refresh with live data
-      if (online) refreshData();
     });
 
     return () => window.removeEventListener("popstate", handlePopState);
@@ -175,8 +170,25 @@ export default function Home() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ── Landing page — shown when no dataset is loaded ── */}
         {!summary && activeTab !== "upload" && activeTab !== "benchmark" ? (
-          <div className="max-w-4xl mx-auto my-8 space-y-8">
-            <div className="fintech-panel rounded-2xl p-8 sm:p-10 relative overflow-hidden border border-white/[0.08]">
+          <div className="max-w-4xl mx-auto my-6 sm:my-8 space-y-6 sm:space-y-8">
+            {activeTab !== "overview" && (
+              <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+                <div className="flex items-center space-x-2.5">
+                  <FileCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span>
+                    To explore the <strong>{activeTab === "exceptions" ? "Exceptions Queue" : activeTab === "assistant" ? "Query Engine" : "Audit Trail"}</strong>, please load the sample dataset or ingest CSV reports below.
+                  </span>
+                </div>
+                <button
+                  onClick={handleLoadDemo}
+                  disabled={isLoadingDemo}
+                  className="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                >
+                  {isLoadingDemo ? "Reconciling..." : "Load Demo Dataset"}
+                </button>
+              </div>
+            )}
+            <div className="fintech-panel rounded-2xl p-6 sm:p-10 relative overflow-hidden border border-white/[0.08]">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-emerald-950/70 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-4">
                 <FileCheck className="h-3.5 w-3.5" />
                 <span>Deterministic 4-Level Reconciliation Engine</span>
